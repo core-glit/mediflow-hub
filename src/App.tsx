@@ -16,6 +16,7 @@ import Billing from "./pages/Billing";
 import Consultations from "./pages/Consultations";
 import Maternity from "./pages/Maternity";
 import Optical from "./pages/Optical";
+import Appointments from "./pages/Appointments";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/wards" element={<Wards />} />
             <Route path="/billing" element={<Billing />} />
             <Route path="/consultations" element={<Consultations />} />
+            <Route path="/appointments" element={<Appointments />} />
             <Route path="/maternity" element={<Maternity />} />
             <Route path="/optical" element={<Optical />} />
           </Route>

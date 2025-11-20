@@ -34,12 +34,15 @@ const Dashboard = () => {
         .select("*", { count: "exact", head: true });
 
       // Fetch today's appointments
-      const today = new Date().toISOString().split("T")[0];
+      const today = new Date();
+      const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
       const { count: appointmentsCount } = await supabase
         .from("appointments")
         .select("*", { count: "exact", head: true })
-        .gte("appointment_date", `${today}T00:00:00`)
-        .lt("appointment_date", `${today}T23:59:59`);
+        .gte("appointment_date", startOfDay.toISOString())
+        .lt("appointment_date", endOfDay.toISOString());
 
       // Fetch active admissions
       const { count: admissionsCount } = await supabase
@@ -54,11 +57,12 @@ const Dashboard = () => {
         .in("payment_status", ["pending", "partial"]);
 
       // Fetch today's revenue (using 'billing' table)
+      const todayStr = today.toISOString().split("T")[0];
       const { data: todayBills } = await supabase
         .from("billing")
         .select("paid_amount")
-        .gte("created_at", `${today}T00:00:00`)
-        .lt("created_at", `${today}T23:59:59`)
+        .gte("created_at", `${todayStr}T00:00:00`)
+        .lt("created_at", `${todayStr}T23:59:59`)
         .eq("payment_status", "paid");
 
       const revenue = (todayBills as any[])?.reduce((sum, bill) => sum + Number(bill.paid_amount || 0), 0) || 0;

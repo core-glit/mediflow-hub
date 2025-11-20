@@ -22,16 +22,14 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 const patientSchema = z.object({
-    first_name: z.string().min(2, "First name must be at least 2 characters"),
-    last_name: z.string().min(2, "Last name must be at least 2 characters"),
+    full_name: z.string().min(2, "Full name must be at least 2 characters"),
     date_of_birth: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid date"),
-    gender: z.enum(["Male", "Female", "Other"]),
+    sex: z.enum(["Male", "Female", "Other"]),
     phone: z.string().min(9, "Phone number must be at least 9 digits"),
     address: z.string().optional(),
-    insurance_provider: z.string().optional(),
-    insurance_id: z.string().optional(),
-    emergency_contact_name: z.string().optional(),
-    emergency_contact_phone: z.string().optional(),
+    city: z.string().optional(),
+    insurance_company: z.string().optional(),
+    insurance_number: z.string().optional(),
 });
 
 type PatientFormValues = z.infer<typeof patientSchema>;
@@ -45,44 +43,47 @@ export function PatientForm({ onSuccess }: PatientFormProps) {
     const form = useForm<PatientFormValues>({
         resolver: zodResolver(patientSchema),
         defaultValues: {
-            first_name: "",
-            last_name: "",
+            full_name: "",
             date_of_birth: "",
-            gender: "Male",
+            sex: "Male",
             phone: "",
             address: "",
-            insurance_provider: "",
-            insurance_id: "",
-            emergency_contact_name: "",
-            emergency_contact_phone: "",
+            city: "",
+            insurance_company: "",
+            insurance_number: "",
         },
     });
 
     const onSubmit = async (values: PatientFormValues) => {
         try {
-            // Generate a simple patient ID (in a real app, this might be more complex or DB generated)
-            const patientId = `PCC-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
+            // Generate a simple patient number (in a real app, this might be more complex or DB generated)
+            const patientNumber = `PCC-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
 
-            // Insert patient data - excluding emergency contact fields that don't exist in DB yet
+            // Calculate age from date of birth
+            const age = new Date().getFullYear() - new Date(values.date_of_birth).getFullYear();
+
+            // Insert patient data matching the database schema
             const { error } = await supabase
                 .from("patients")
                 .insert({
-                    patient_id: patientId,
-                    first_name: values.first_name,
-                    last_name: values.last_name,
+                    patient_number: patientNumber,
+                    full_name: values.full_name,
                     date_of_birth: values.date_of_birth,
-                    gender: values.gender,
+                    age: age,
+                    sex: values.sex,
                     phone: values.phone,
                     address: values.address || null,
-                    insurance_provider: values.insurance_provider || null,
-                    insurance_id: values.insurance_id || null,
+                    city: values.city || null,
+                    insurance_company: values.insurance_company || null,
+                    insurance_number: values.insurance_number || null,
+                    insurance_status: values.insurance_company ? 'active' : 'none',
                 } as any);
 
             if (error) throw error;
 
             toast({
                 title: "Patient Registered",
-                description: `Successfully registered ${values.first_name} ${values.last_name}`,
+                description: `Successfully registered ${values.full_name}`,
             });
 
             form.reset();
@@ -99,34 +100,19 @@ export function PatientForm({ onSuccess }: PatientFormProps) {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                        control={form.control}
-                        name="first_name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>First Name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="John" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="last_name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Last Name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Doe" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
+                <FormField
+                    control={form.control}
+                    name="full_name"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Full Name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="John Doe" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
@@ -144,14 +130,14 @@ export function PatientForm({ onSuccess }: PatientFormProps) {
                     />
                     <FormField
                         control={form.control}
-                        name="gender"
+                        name="sex"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Gender</FormLabel>
+                                <FormLabel>Sex</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select gender" />
+                                            <SelectValue placeholder="Select sex" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
@@ -180,29 +166,15 @@ export function PatientForm({ onSuccess }: PatientFormProps) {
                     )}
                 />
 
-                <FormField
-                    control={form.control}
-                    name="address"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Address</FormLabel>
-                            <FormControl>
-                                <Input placeholder="City, Street..." {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                         control={form.control}
-                        name="insurance_provider"
+                        name="address"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Insurance Provider (Optional)</FormLabel>
+                                <FormLabel>Address</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Provider Name" {...field} />
+                                    <Input placeholder="Street address" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -210,12 +182,12 @@ export function PatientForm({ onSuccess }: PatientFormProps) {
                     />
                     <FormField
                         control={form.control}
-                        name="insurance_id"
+                        name="city"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Insurance ID (Optional)</FormLabel>
+                                <FormLabel>City</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Policy Number" {...field} />
+                                    <Input placeholder="City" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -226,12 +198,12 @@ export function PatientForm({ onSuccess }: PatientFormProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                         control={form.control}
-                        name="emergency_contact_name"
+                        name="insurance_company"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Emergency Contact Name (Optional)</FormLabel>
+                                <FormLabel>Insurance Company (Optional)</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Name" {...field} />
+                                    <Input placeholder="Company Name" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -239,12 +211,12 @@ export function PatientForm({ onSuccess }: PatientFormProps) {
                     />
                     <FormField
                         control={form.control}
-                        name="emergency_contact_phone"
+                        name="insurance_number"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Emergency Contact Phone (Optional)</FormLabel>
+                                <FormLabel>Insurance Number (Optional)</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Phone" {...field} />
+                                    <Input placeholder="Policy Number" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

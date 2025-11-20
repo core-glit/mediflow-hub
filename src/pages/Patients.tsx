@@ -56,8 +56,8 @@ const Patients = () => {
   }, []);
 
   const filteredPatients = patients.filter((patient) =>
-    `${patient.full_name} ${patient.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    patient.patient_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    patient.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    patient.patient_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     patient.phone?.includes(searchTerm)
   );
 
@@ -119,7 +119,7 @@ const Patients = () => {
                 <TableRow>
                   <TableHead>Patient ID</TableHead>
                   <TableHead>Name</TableHead>
-                  <TableHead>Gender</TableHead>
+                  <TableHead>Sex</TableHead>
                   <TableHead>Age</TableHead>
                   <TableHead>Phone</TableHead>
                   <TableHead>Last Visit</TableHead>
@@ -142,22 +142,22 @@ const Patients = () => {
                 ) : (
                   filteredPatients.map((patient) => (
                     <TableRow key={patient.id} className="cursor-pointer hover:bg-muted/50">
-                      <TableCell className="font-medium">{patient.patient_id}</TableCell>
+                      <TableCell className="font-medium">{patient.patient_number}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                             <User className="h-4 w-4" />
                           </div>
                           <span className="font-medium">
-                            {patient.full_name} {patient.last_name}
+                            {patient.full_name}
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell className="capitalize">{patient.gender}</TableCell>
+                      <TableCell className="capitalize">{patient.sex}</TableCell>
                       <TableCell>
-                        {patient.date_of_birth
+                        {patient.age || (patient.date_of_birth
                           ? new Date().getFullYear() - new Date(patient.date_of_birth).getFullYear()
-                          : "N/A"}
+                          : "N/A")}
                       </TableCell>
                       <TableCell>{patient.phone || "N/A"}</TableCell>
                       <TableCell>
