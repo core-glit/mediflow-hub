@@ -1,56 +1,10 @@
-# Welcome to your Lovable project
+# MediFlow Hub - Hospital Management System
 
-## Project info
+## Project Overview
 
-**URL**: https://lovable.dev/projects/f4cde6be-2d9d-4cb2-809f-f64e42223529
+MediFlow Hub is a comprehensive Hospital Management System (HMS) with integrated CRM functionality. This system provides tools for managing patients, appointments, billing, inventory, and more.
 
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/f4cde6be-2d9d-4cb2-809f-f64e42223529) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
+## Technologies Used
 
 This project is built with:
 
@@ -59,15 +13,72 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase (Backend & Database)
 
-## How can I deploy this project?
+## Getting Started
 
-Simply open [Lovable](https://lovable.dev/projects/f4cde6be-2d9d-4cb2-809f-f64e42223529) and click on Share -> Publish.
+### Prerequisites
 
-## Can I connect a custom domain to my Lovable project?
+- Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Supabase account and project
 
-Yes, you can!
+### Installation
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Follow these steps to run the project locally:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```sh
+# Step 1: Clone the repository
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory
+cd mediflow-hub
+
+# Step 3: Install the necessary dependencies
+npm install
+
+# Step 4: Set up environment variables
+# Create a .env file and add your Supabase credentials
+# VITE_SUPABASE_URL=your_supabase_url
+# VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Step 5: Start the development server
+npm run dev
+```
+
+## Development
+
+### Local Development
+
+You can edit the code using your preferred IDE. The development server supports hot-reloading for instant preview of changes.
+
+### Project Structure
+
+- `/src` - Source code
+  - `/components` - Reusable React components
+  - `/pages` - Page components
+  - `/integrations` - External service integrations (Supabase)
+  - `/hooks` - Custom React hooks
+- `/public` - Static assets
+- `/supabase` - Supabase configuration and migrations
+
+## Deployment
+
+You can deploy this project to various hosting platforms:
+
+- Vercel
+- Netlify
+- GitHub Pages
+- Any static hosting service
+
+Make sure to set up your environment variables in your deployment platform.
+
+## Features
+
+- Patient Management
+- Appointment Scheduling
+- Billing & Invoicing
+- Inventory Management
+- Staff Management
+- Dashboard & Analytics
+- CRM Integration
+
