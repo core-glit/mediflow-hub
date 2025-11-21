@@ -52,7 +52,7 @@ const Appointments = () => {
                 .from("appointments")
                 .select(`
           *,
-          patient:patients(id, full_name, patient_number),
+          patient:patients(id, first_name, last_name, patient_id),
           doctor:profiles!appointments_doctor_id_fkey(id, full_name)
         `)
                 .order("appointment_date", { ascending: false });
@@ -94,8 +94,9 @@ const Appointments = () => {
     }, []);
 
     const filteredAppointments = appointments.filter((appointment) => {
+        const patientName = appointment.patient ? `${appointment.patient.first_name} ${appointment.patient.last_name}` : "";
         const matchesSearch =
-            appointment.patient?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             appointment.doctor?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             appointment.reason?.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -262,6 +263,7 @@ const Appointments = () => {
                                 ) : (
                                     filteredAppointments.map((appointment) => {
                                         const { date, time } = formatDateTime(appointment.appointment_date);
+                                        const patientName = appointment.patient ? `${appointment.patient.first_name} ${appointment.patient.last_name}` : "N/A";
                                         return (
                                             <TableRow key={appointment.id} className="cursor-pointer hover:bg-muted/50">
                                                 <TableCell>
@@ -272,9 +274,9 @@ const Appointments = () => {
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className="flex flex-col">
-                                                        <span className="font-medium">{appointment.patient?.full_name || "N/A"}</span>
+                                                        <span className="font-medium">{patientName}</span>
                                                         <span className="text-sm text-muted-foreground">
-                                                            {appointment.patient?.patient_number || ""}
+                                                            {appointment.patient?.patient_id || ""}
                                                         </span>
                                                     </div>
                                                 </TableCell>

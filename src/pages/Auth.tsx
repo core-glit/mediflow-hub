@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("login");
 
   // Login state
   const [loginEmail, setLoginEmail] = useState("");
@@ -46,7 +47,7 @@ const Auth = () => {
     } catch (error: any) {
       toast({
         title: "Login failed",
-        description: error.message,
+        description: error.message || "An unexpected error occurred",
         variant: "destructive",
       });
     } finally {
@@ -78,14 +79,12 @@ const Auth = () => {
           title: "Registration successful!",
           description: "You can now log in with your credentials",
         });
-        // Switch to login tab
-        const loginTab = document.querySelector('[data-state="inactive"][value="login"]') as HTMLElement;
-        loginTab?.click();
+        setActiveTab("login");
       }
     } catch (error: any) {
       toast({
         title: "Registration failed",
-        description: error.message,
+        description: error.message || "An unexpected error occurred",
         variant: "destructive",
       });
     } finally {
@@ -101,7 +100,7 @@ const Auth = () => {
           <CardDescription>Presbyterian Church in Cameroon - General Hospital</CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="login" className="w-full">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="login">Login</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
