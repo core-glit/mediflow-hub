@@ -36,6 +36,7 @@ const Layout = () => {
     const location = useLocation();
     const [user, setUser] = useState<any>(null);
     const [profile, setProfile] = useState<any>(null);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const getUser = async () => {
@@ -86,7 +87,7 @@ const Layout = () => {
         { to: "/optical", icon: Eye, label: "Optical" },
     ];
 
-    const SidebarContent = () => (
+    const SidebarContent = ({ onNavClick }: { onNavClick?: () => void }) => (
         <div className="flex flex-col h-full bg-card border-r">
             <div className="p-6 border-b">
                 <h1 className="text-2xl font-bold text-primary">PCC Hospital</h1>
@@ -98,6 +99,7 @@ const Layout = () => {
                         <li key={item.to}>
                             <NavLink
                                 to={item.to}
+                                onClick={onNavClick}
                                 className={({ isActive }) =>
                                     cn(
                                         "flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-colors",
@@ -141,14 +143,14 @@ const Layout = () => {
             </aside>
 
             {/* Mobile Sidebar */}
-            <Sheet>
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                 <SheetTrigger asChild>
                     <Button variant="ghost" size="icon" className="md:hidden fixed top-4 left-4 z-50">
                         <Menu className="h-6 w-6" />
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="p-0 w-64">
-                    <SidebarContent />
+                    <SidebarContent onNavClick={() => setIsMobileMenuOpen(false)} />
                 </SheetContent>
             </Sheet>
 
