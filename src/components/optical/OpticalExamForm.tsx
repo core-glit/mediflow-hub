@@ -25,7 +25,7 @@ export const OpticalExamForm = ({ patientId }: { patientId?: string }) => {
 
         setLoading(true);
         try {
-            const { error } = await supabase.from("optical_records").insert({
+            const { error } = await (supabase.from("optical_records") as any).insert({
                 patient_id: patientId,
                 doctor_id: (await supabase.auth.getUser()).data.user?.id,
                 ...data,

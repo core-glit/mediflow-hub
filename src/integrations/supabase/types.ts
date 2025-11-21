@@ -41,49 +41,70 @@ export type Database = {
       patients: {
         Row: {
           id: string
-          patient_id: string
-          first_name: string
-          last_name: string
-          date_of_birth: string
-          gender: string | null
+          patient_number: string
+          full_name: string
+          date_of_birth: string | null
+          age: number | null
+          sex: string | null
           phone: string | null
+          email: string | null
           address: string | null
-          insurance_provider: string | null
-          insurance_id: string | null
-          emergency_contact_name: string | null
-          emergency_contact_phone: string | null
+          city: string | null
+          country: string | null
+          blood_group: string | null
+          hiv_status: string | null
+          allergies: string[] | null
+          insurance_company: string | null
+          insurance_number: string | null
+          insurance_status: string | null
+          patient_type: string | null
+          registered_by: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
-          patient_id: string
-          first_name: string
-          last_name: string
-          date_of_birth: string
-          gender?: string | null
+          patient_number: string
+          full_name: string
+          date_of_birth?: string | null
+          age?: number | null
+          sex?: string | null
           phone?: string | null
+          email?: string | null
           address?: string | null
-          insurance_provider?: string | null
-          insurance_id?: string | null
-          emergency_contact_name?: string | null
-          emergency_contact_phone?: string | null
+          city?: string | null
+          country?: string | null
+          blood_group?: string | null
+          hiv_status?: string | null
+          allergies?: string[] | null
+          insurance_company?: string | null
+          insurance_number?: string | null
+          insurance_status?: string | null
+          patient_type?: string | null
+          registered_by?: string | null
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
-          patient_id?: string
-          first_name?: string
-          last_name?: string
-          date_of_birth?: string
-          gender?: string | null
+          patient_number?: string
+          full_name?: string
+          date_of_birth?: string | null
+          age?: number | null
+          sex?: string | null
           phone?: string | null
+          email?: string | null
           address?: string | null
-          insurance_provider?: string | null
-          insurance_id?: string | null
-          emergency_contact_name?: string | null
-          emergency_contact_phone?: string | null
+          city?: string | null
+          country?: string | null
+          blood_group?: string | null
+          hiv_status?: string | null
+          allergies?: string[] | null
+          insurance_company?: string | null
+          insurance_number?: string | null
+          insurance_status?: string | null
+          patient_type?: string | null
+          registered_by?: string | null
           created_at?: string
           updated_at?: string
         }

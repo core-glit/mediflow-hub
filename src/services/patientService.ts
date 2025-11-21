@@ -13,27 +13,30 @@ export const patientService = {
     },
 
     async createPatient(patientData: PatientFormData, userId: string) {
-        const { error } = await supabase.from("patients").insert([
-            {
-                patient_number: generatePatientNumber(),
-                full_name: patientData.full_name,
-                date_of_birth: patientData.date_of_birth || null,
-                age: patientData.age ? parseInt(patientData.age) : null,
-                sex: patientData.sex || null,
-                phone: patientData.phone || null,
-                email: patientData.email || null,
-                address: patientData.address || null,
-                city: patientData.city || null,
-                blood_group: patientData.blood_group || null,
-                insurance_company: patientData.insurance_company || null,
-                insurance_number: patientData.insurance_number || null,
-                insurance_status: patientData.insurance_status,
-                patient_type: patientData.patient_type,
-                registered_by: userId,
-            },
-        ]);
+        const { data: patient, error: patientError } = await (supabase
+            .from("patients") as any)
+            .insert([
+                {
+                    patient_number: generatePatientNumber(),
+                    full_name: patientData.full_name,
+                    date_of_birth: patientData.date_of_birth,
+                    sex: patientData.sex || null,
+                    phone: patientData.phone || null,
+                    email: patientData.email || null,
+                    address: patientData.address || null,
+                    city: patientData.city || null,
+                    blood_group: patientData.blood_group || null,
+                    insurance_company: patientData.insurance_company || null,
+                    insurance_number: patientData.insurance_number || null,
+                    registered_by: userId,
+                },
+            ])
+            .select()
+            .single();
 
-        if (error) throw error;
+        if (patientError) throw patientError;
+
+        return patient;
     },
 };
 

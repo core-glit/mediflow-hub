@@ -16,8 +16,8 @@ export const OpticalInventory = () => {
 
     const fetchInventory = async () => {
         try {
-            const { data, error } = await supabase
-                .from("optical_inventory")
+            const { data, error } = await (supabase
+                .from("optical_inventory") as any)
                 .select("*")
                 .order("created_at", { ascending: false });
 

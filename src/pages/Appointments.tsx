@@ -48,11 +48,11 @@ const Appointments = () => {
     const fetchAppointments = async () => {
         try {
             setLoading(true);
-            const { data, error } = await supabase
-                .from("appointments")
+            const { data, error } = await (supabase
+                .from("appointments") as any)
                 .select(`
           *,
-          patient:patients(id, first_name, last_name, patient_id),
+          patient:patients(id, full_name, patient_number),
           doctor:profiles!appointments_doctor_id_fkey(id, full_name)
         `)
                 .order("appointment_date", { ascending: false });
@@ -94,7 +94,7 @@ const Appointments = () => {
     }, []);
 
     const filteredAppointments = appointments.filter((appointment) => {
-        const patientName = appointment.patient ? `${appointment.patient.first_name} ${appointment.patient.last_name}` : "";
+        const patientName = appointment.patient ? appointment.patient.full_name : "";
         const matchesSearch =
             patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             appointment.doctor?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -263,7 +263,7 @@ const Appointments = () => {
                                 ) : (
                                     filteredAppointments.map((appointment) => {
                                         const { date, time } = formatDateTime(appointment.appointment_date);
-                                        const patientName = appointment.patient ? `${appointment.patient.first_name} ${appointment.patient.last_name}` : "N/A";
+                                        const patientName = appointment.patient ? appointment.patient.full_name : "N/A";
                                         return (
                                             <TableRow key={appointment.id} className="cursor-pointer hover:bg-muted/50">
                                                 <TableCell>
@@ -276,7 +276,7 @@ const Appointments = () => {
                                                     <div className="flex flex-col">
                                                         <span className="font-medium">{patientName}</span>
                                                         <span className="text-sm text-muted-foreground">
-                                                            {appointment.patient?.patient_id || ""}
+                                                            {appointment.patient?.patient_number || ""}
                                                         </span>
                                                     </div>
                                                 </TableCell>

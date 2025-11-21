@@ -1,0 +1,2 @@
+src/pages/Maternity.tsx(13,10): error TS2559: Type '{ children: Element; }' has no properties in common with type 'IntrinsicAttributes'.
+src/pages/Optical.tsx(13,10): error TS2559: Type '{ children: Element; }' has no properties in common with type 'IntrinsicAttributes'.

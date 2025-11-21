@@ -26,7 +26,7 @@ export const DeliveryRecord = ({ patientId }: { patientId?: string }) => {
 
         setLoading(true);
         try {
-            const { error } = await supabase.from("maternity_records").insert({
+            const { error } = await (supabase.from("maternity_records") as any).insert({
                 patient_id: patientId,
                 doctor_id: (await supabase.auth.getUser()).data.user?.id,
                 visit_type: "delivery",
